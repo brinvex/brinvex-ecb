@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.brinvex</groupId>
+    <artifactId>brinvex-ecb</artifactId>
+    <version>1.0.0</version>
+
+    <description>
+        Brinvex ECB is a lightweight Java library that simplifies working with the European Central Bank's Data API.
+    </description>
+    <organization>
+        <name>Brinvex</name>
+        <url>https://brinvex.com</url>
+    </organization>
+    <url>https://github.com/brinvex/brinvex-ecb</url>
+    <inceptionYear>2024</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>dev1@brinvex.com</name>
+            <email>dev1@brinvex.com</email>
+            <organization>Brinvex</organization>
+            <organizationUrl>https://brinvex.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <properties>
+        <java.version>21</java.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven-deploy-plugin.version>3.1.3</maven-deploy-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven.compiler.showWarnings>true</maven.compiler.showWarnings>
+        <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
+
+        <junit-jupiter.version>5.11.3</junit-jupiter.version>
+
+        <github-site-maven-plugin.version>0.11</github-site-maven-plugin.version>
+        <github.global.server>github</github.global.server>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit-jupiter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit-jupiter.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>temp-internal-staging-repo</id>
+            <name>Temporary Internal Staging Repository</name>
+            <url>file://${project.build.directory}/repo</url>
+        </repository>
+    </distributionManagement>
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>4.1</version>
+                <configuration>
+                    <properties>
+                        <owner>Brinvex</owner>
+                        <email>dev1@brinvex.com</email>
+                    </properties>
+                    <licenseSets>
+                        <licenseSet>
+                            <header>com/mycila/maven/plugin/license/templates/APACHE-2.txt</header>
+                            <excludes>
+                                <exclude>src/main/resources/**</exclude>
+                                <exclude>src/test/resources/**</exclude>
+                                <exclude>**/.gitignore</exclude>
+                                <exclude>**/release.bat</exclude>
+                                <exclude>**/.LICENSE</exclude>
+                                <exclude>**/.README</exclude>
+                                <exclude>**/pom.xml</exclude>
+                                <exclude>.run/**</exclude>
+                            </excludes>
+                        </licenseSet>
+                    </licenseSets>
+                </configuration>
+            </plugin>
+
+            <!--
+                        https://www.baeldung.com/maven-repo-github
+                        https://stackoverflow.com/questions/14013644/hosting-a-maven-repository-on-github
+                        -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>${github-site-maven-plugin.version}</version>
+                <configuration>
+                    <!-- git commit message -->
+                    <message>Maven artifacts for ${project.name} ${project.version}</message>
+                    <!-- disable webpage processing -->
+                    <noJekyll>true</noJekyll>
+                    <!-- matches distribution management repository url above -->
+                    <outputDirectory>${project.build.directory}/repo</outputDirectory>
+                    <!-- remote branch name -->
+                    <branch>refs/heads/main</branch>
+                    <includes><include>**/*</include></includes>
+                    <!-- GitHub repo name -->
+                    <repositoryName>brinvex-repo</repositoryName>
+                    <!-- GitHub username  -->
+                    <repositoryOwner>brinvex</repositoryOwner>
+                    <merge>true</merge>
+                </configuration>
+                <executions>
+                    <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
+                    <execution>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
