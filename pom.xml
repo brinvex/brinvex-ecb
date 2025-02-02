@@ -50,7 +50,7 @@
         <junit-jupiter.version>5.11.3</junit-jupiter.version>
 
         <github-site-maven-plugin.version>0.11</github-site-maven-plugin.version>
-        <github.global.server>github</github.global.server>
+        <github.global.server>github-pubrepo-brinvex</github.global.server>
     </properties>
 
     <dependencyManagement>
@@ -152,7 +152,7 @@
                     <branch>refs/heads/main</branch>
                     <includes><include>**/*</include></includes>
                     <!-- GitHub repo name -->
-                    <repositoryName>brinvex-repo</repositoryName>
+                    <repositoryName>brinvex-pubrepo</repositoryName>
                     <!-- GitHub username  -->
                     <repositoryOwner>brinvex</repositoryOwner>
                     <merge>true</merge>
